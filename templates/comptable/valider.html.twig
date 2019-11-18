@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Comptable - Valider{% endblock %}
+
+{% block body %}
+<div class="container">
+    <nav style="background-color:#e83753;" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <ul class="nav navbar-nav">
+                    <li><a style="color:#ffffff;">{{ app.session.get('prenom') }} {{ app.session.get('nom') }}</a></li>
+                </ul>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a style="color:#ffffff;margin-left:200px;" href="comptable">Accueil</a></li>
+                    <li><a style="color:#ffffff;" href="comptable_valider">Valider fiche de frais</a></li>
+                    <li><a style="color:#ffffff;" href="comptable_suivi">Suivi fiche de frais</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a style="color:#ffffff;" href="connexion">Se déconnecter</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br/>
+    <center>
+    <div style="width: 50%; border: 1px solid black; background-color: background">
+        <center><h3>Validation des frais par visiteur</h3></center>
+        {% if error == 1 %}
+            <p class="alert alert-danger">Cette fiche de frais n'existe pas!</p>
+        {% endif %}
+        {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+        {{ form_widget(form) }}
+        <br/>
+        <div class="row">
+            <div>
+                <button type="reset" class="btn btn-danger">Annuler</button>
+                <button style="margin-left: 20px" type="submit" class="btn btn-success">Valider</button>
+            </div>
+        </div>
+        <br/>
+    </div>
+    </center>
+</div>
+{% endblock %}

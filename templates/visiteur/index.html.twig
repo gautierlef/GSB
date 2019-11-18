@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Visiteur - Accueil{% endblock %}
+
+{% block head %}
+{{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <nav style="background-color:#7695ad;" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a style="color:#ffffff; margin-right: 250px" href="/visiteur">Accueil</a></li>
+                    <li><a style="color:#ffffff;" href="/renseigner">Renseigner fiche de frais</a></li>
+                        <li><a style="color:#ffffff;" href="/consulter">Consulter fiche de frais</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a style="color:#ffffff;" href="connexion">Se déconnecter</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <center>
+        {% for message in app.flashes('notice') %}
+            <div class="flash-notice">
+                <h1>{{ message }}</h1>
+            </div>
+        {% endfor %}
+        <h1>{{ app.session.get('nom') }} {{ app.session.get('prenom') }}</h1>
+        <img width="400px" height="370px" src="images/"></img>
+    </center>
+</div>
+{% endblock %}
+

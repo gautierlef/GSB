@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Intranet du Laboratoire Galaxy-Swiss Bourdin{% endblock %}
+
+
+{% block body %}
+<div id="page"><center>
+    <div id="entete">
+        <img src="./assets/logo.jpg" id="logoGSB" alt="Laboratoire Galaxy-Swiss Bourdin" title="Laboratoire Galaxy-Swiss Bourdin" />
+        <h1>Suivi du remboursement des frais</h1>
+    </div>
+    <br/>
+    <div style="width: 50%; border: 1px solid black; background-color: background"><br/>
+        {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+            {{ form_widget(form) }}
+            <br/>
+            <div class="row" >
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button style="margin-left: 20px; width: 50%" type="submit" class="btn btn-success"> Valider</button>
+                    <button style="margin-left: 20px" type="reset" class="btn btn-danger">Annuler</button>
+                    
+                </div>
+            </div>
+            <br/>
+        </div>
+    </div>
+</center></div>
+{%endblock%}
+

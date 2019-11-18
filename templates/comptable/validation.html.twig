@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Comptable - Valider{% endblock %}
+
+{% block body %}
+<div class="container">
+    <nav style="background-color:#e83753;" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <ul class="nav navbar-nav">
+                    <li><a style="color:#ffffff;">{{ app.session.get('prenom') }} {{ app.session.get('nom') }}</a></li>
+                </ul>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a style="color:#ffffff;margin-left:200px;" href="comptable">Accueil</a></li>
+                    <li><a style="color:#ffffff;" href="comptable_valider">Valider fiche de frais</a></li>
+                    <li><a style="color:#ffffff;" href="comptable_suivi">Suivi fiche de frais</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a style="color:#ffffff;" href="connexion">Se déconnecter</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br/>
+    <center><div style="width: 75%; border: 1px solid black; background-color: background">
+        <center><h3 style="text-decoration: underline">Fiche de {{ fiche.idVisiteur.prenom }} {{ fiche.idVisiteur.nom }} pour {{ fiche.mois }}</h3></center>
+        <h4 style="text-decoration: underline">Lignes de frais forfait :</h4>
+        <table style="width: 80%;">
+            <tr>
+                <th>Type</th>
+                <th>Quantité</th>
+                <th>Prix unitaire</th>
+                <th>Montant total</th>
+                <th>Modifier quantité</th>
+            </tr>
+            <tr>
+                <td>{{ lignesFraisForfait[0].idFraisForfait.libelle }}</td>
+                <td>{{ lignesFraisForfait[0].quantite }}</td>
+                <td>{{ lignesFraisForfait[0].idFraisForfait.montant }}</td>
+                <td>{{ lignesFraisForfait[0].idFraisForfait.montant * lignesFraisForfait[0].quantite }}</td>
+                {{ form_start(form1, {'attr': {'class': 'form-horizontal'}}) }}
+                <td>{{ form_widget(form1.quantite) }}</td>
+                <td>{{ form_widget(form1.modifier) }}</td>
+                {{  form_end(form1) }}
+            </tr>
+            <tr>
+                <td>{{ lignesFraisForfait[1].idFraisForfait.libelle }}</td>
+                <td>{{ lignesFraisForfait[1].quantite }}</td>
+                <td>{{ lignesFraisForfait[1].idFraisForfait.montant }}</td>
+                <td>{{ lignesFraisForfait[1].idFraisForfait.montant * lignesFraisForfait[1].quantite }}</td>
+                {{ form_start(form2, {'attr': {'class': 'form-horizontal'}}) }}
+                <td>{{ form_widget(form2.quantite) }}</td>
+                <td>{{ form_widget(form2.modifier) }}</td>
+                {{  form_end(form2) }}
+            </tr>
+            <tr>
+                <td>{{ lignesFraisForfait[2].idFraisForfait.libelle }}</td>
+                <td>{{ lignesFraisForfait[2].quantite }}</td>
+                <td>{{ lignesFraisForfait[2].idFraisForfait.montant }}</td>
+                <td>{{ lignesFraisForfait[2].idFraisForfait.montant * lignesFraisForfait[2].quantite }}</td>
+                {{ form_start(form3, {'attr': {'class': 'form-horizontal'}}) }}
+                <td>{{ form_widget(form3.quantite) }}</td>
+                <td>{{ form_widget(form3.modifier) }}</td>
+                {{  form_end(form3) }}
+            </tr>
+            <tr>
+                <td>{{ lignesFraisForfait[3].idFraisForfait.libelle }}</td>
+                <td>{{ lignesFraisForfait[3].quantite }}</td>
+                <td>{{ lignesFraisForfait[3].idFraisForfait.montant }}</td>
+                <td>{{ lignesFraisForfait[3].idFraisForfait.montant * lignesFraisForfait[3].quantite }}</td>
+                {{ form_start(form4, {'attr': {'class': 'form-horizontal'}}) }}
+                <td>{{ form_widget(form4.quantite) }}</td>
+                <td>{{ form_widget(form4.modifier) }}</td>
+                {{  form_end(form4) }}
+            </tr>
+        </table>
+        <br/>
+        <h4 style="text-decoration: underline">Lignes de frais hors forfait :</h4>
+        <table style="width: 80%;">
+            <tr>
+                <th>Libelle</th>
+                <th>Date</th>
+                <th>Montant</th>
+            </tr>
+            {%  for ligneFraisHorsForfait in lignesFraisHorsForfait %}
+                <tr>
+                    <td>{{ ligneFraisHorsForfait.libelle }} </td>
+                    <td> {{ ligneFraisHorsForfait.date.format('d-m-Y') }} </td>
+                    <td> {{ ligneFraisHorsForfait.montant }} </td>
+                    <td><a href="/supprimerHorsForfait/{{ ligneFraisHorsForfait.id }}" type="button" class="btn btn-danger">Supprimer</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div></center>
+</div>
+{% endblock %}

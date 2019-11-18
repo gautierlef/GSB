@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Visiteur - Renseigner{% endblock %}
+
+{% block head %}
+{{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <nav style="background-color:#7695ad;" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a style="color:#ffffff; margin-right: 250px" href="/visiteur">Accueil</a></li>
+                    <li><a style="color:#ffffff;" href="/renseigner">Renseigner fiche de frais</a></li>
+                        <li><a style="color:#ffffff;" href="/consulter">Consulter fiche de frais</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a style="color:#ffffff;" href="/connexion">Se déconnecter</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <center>
+        <h1>{{ app.session.get('nom') }} {{ app.session.get('prenom') }}</h1>
+        {{ form(form) }}
+        <br/>
+        <h2>Frais Hors Forfait</h2>
+        {{ form_start(form2, {'attr': {'class': 'form-horizontal'}}) }}
+        {{ form_widget(form2) }}
+        <br/>
+        <div class="row">
+            <div>
+                <button type="reset" class="btn btn-danger">Annuler</button>
+                <button style="margin-left: 20px" type="submit" class="btn btn-success">Valider</button>
+            </div>
+        </div>
+    </center>
+</div>
+{% endblock %}
+

@@ -5,10 +5,12 @@
         <group>
             <file>file:/var/www/html/projetGSB/src/Controller/VisiteurController.php</file>
             <file>file:/var/www/html/projetGSB/templates/visiteur/consulter.html.twig</file>
+            <file>file:/var/www/html/projetGSB/src/Entity/FicheFrais.php</file>
+            <file>file:/var/www/html/projetGSB/src/Form/ValiderFicheType.php</file>
             <file>file:/var/www/html/projetGSB/src/Form/RenseignerType.php</file>
             <file>file:/var/www/html/projetGSB/templates/visiteur/index.html.twig</file>
             <file>file:/var/www/html/projetGSB/templates/visiteur/renseigner.html.twig</file>
-            <file>file:/var/www/html/projetGSB/src/Form/LigneFraisHorsForfaitType.php</file>
+            <file>file:/var/www/html/projetGSB/src/Controller/ConnexionController.php</file>
         </group>
     </open-files>
 </project-private>

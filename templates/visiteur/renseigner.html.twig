@@ -26,17 +26,36 @@
     </nav>
     <center>
         <h1>{{ app.session.get('nom') }} {{ app.session.get('prenom') }}</h1>
-        {{ form(form) }}
-        <br/>
-        <h2>Frais Hors Forfait</h2>
-        {{ form_start(form2, {'attr': {'class': 'form-horizontal'}}) }}
-        {{ form_widget(form2) }}
+        {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+        {{ form_label(form.mois) }}
+        {{ form_widget(form.mois) }}<br/><br/>
+        {{ form_label(form.nbjustificatifs) }}
+        {{ form_widget(form.nbjustificatifs) }}<br/>
         <br/>
         <div class="row">
             <div>
-                <button type="reset" class="btn btn-danger">Annuler</button>
-                <button style="margin-left: 20px" type="submit" class="btn btn-success">Valider</button>
+                {{ form_widget(form.annuler) }}
+                <a style="margin-left:20px">{{ form_widget(form.valider) }}</a>
+                {{ form_end(form) }}
             </div>
+        <br/>
+        <h2>Frais Hors Forfait</h2>
+        {{ form_start(form2, {'attr': {'class': 'form-horizontal'}}) }}
+        {{ form_label(form2.libelle) }}
+        {{ form_widget(form2.libelle) }}<br/>
+        {{ form_label(form2.date) }}
+        {{ form_widget(form2.date) }}<br/>
+        {{ form_label(form2.montant) }}
+        {{ form_widget(form2.montant) }}<br/><br/>
+        {{ form_label(form2.mois) }}
+        {{ form_widget(form2.mois) }}<br/>
+        <br/>
+        <div class="row">
+            <div>
+                {{ form_widget(form2.annuler) }}
+                <a style="margin-left:20px">{{ form_widget(form2.valider) }}</a>
+            </div>
+            {{ form_end(form2) }}
         </div>
     </center>
 </div>

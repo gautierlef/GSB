@@ -22,7 +22,7 @@ class RenseignerType extends AbstractType
             ->add('mois', ChoiceType::class, array('choices'  => ['Janvier' => 'Janvier', 'Février' => 'Février', 'Mars' => 'Mars', 'Avril' => 'Avril', 'Mai' => 'Mai', 'Juin' => 'Juin', 'Juillet' => 'Juillet', 'Août' => 'Août', 'Septembre' => 'Septembre', 'Octobre' => 'Octobre', 'Novembre' => 'Novembre', 'Décembre' => 'Décembre'], 'label' => 'Mois : '))
             ->add('nbjustificatifs', NumberType::class, array('label' => 'Nombre de justificatifs : '))
             ->add('valider', SubmitType::class, array('label' => 'Valider', 'attr' =>array('class' => 'btn btn-success')))
-            ->add('annuler', ResetType::class, array('label' => 'Quitter', 'attr' =>array('class' => 'btn btn-warning')))
+            ->add('annuler', ResetType::class, array('label' => 'Annuler', 'attr' =>array('class' => 'btn btn-danger')))
         ;
     }
 

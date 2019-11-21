@@ -26,6 +26,9 @@
     </nav>
     <center>
         <h1>{{ app.session.get('nom') }} {{ app.session.get('prenom') }}</h1>
+        {% if error == 1 %}
+            <p class="alert alert-danger">Cette fiche de frais existe déjà!</p>
+        {% endif %}        
         {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
         {{ form_label(form.mois) }}
         {{ form_widget(form.mois) }}<br/><br/>

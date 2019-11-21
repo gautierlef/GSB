@@ -23,9 +23,7 @@ class VisiteurController extends AbstractController
      */
     public function index()
     {
-        return $this->render('visiteur/index.html.twig', [
-            'controller_name' => 'VisiteurController',
-        ]);
+        return $this->render('visiteur/index.html.twig');
     }
     
     /**
@@ -54,6 +52,12 @@ class VisiteurController extends AbstractController
                     foreach ($visiteurs as $visiteur) {
                         if ($session->get('id') == $visiteur->getId()) {
                             $renseigner->setIdVisiteur($visiteur);   
+                        }
+                    }
+                    $fiches = $this->getFiches();
+                    foreach ($fiches as $fiche) {
+                        if ($fiche->getIdVisiteur()->getId() == $session->get('id') && $renseigner->getMois() == $fiche->getMois()) {
+                            return $this->render('visiteur/renseigner.html.twig', array('form' => $form->createView(), 'form2' => $form2->createView(), 'error' => 1));
                         }
                     }
                     $etats = $this->getEtat();
@@ -86,7 +90,7 @@ class VisiteurController extends AbstractController
                 }     
             }
         }
-        return $this->render('visiteur/renseigner.html.twig', array('form' => $form->createView(), 'form2' => $form2->createView()));
+        return $this->render('visiteur/renseigner.html.twig', array('form' => $form->createView(), 'form2' => $form2->createView(), 'error' => 0));
     }
     
     public function creerLigneFrais(String $idFicheFrais) {

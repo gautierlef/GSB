@@ -28,7 +28,10 @@
     <div style="width: 50%; border: 1px solid black; background-color: background">
         <center><h3>Validation des frais par visiteur</h3></center>
         {% if error == 1 %}
-            <p class="alert alert-danger">Cette fiche de frais n'existe pas!</p>
+            <p class="alert alert-danger">Cette fiche de frais n'existe pas ou a déjà été validée!</p>
+        {% endif %}
+        {% if modifier == 1 %}
+            <p class="alert alert-success">Fiche de frais validée!</p>
         {% endif %}
         {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
         {{ form_widget(form) }}

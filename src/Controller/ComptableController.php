@@ -45,17 +45,21 @@ class ComptableController extends AbstractController
             if ($form->isValid()) {
                 $fiches = $this->getFiches();
                 foreach ($fiches as $fiche) {
-                    if ($fiche->getMois() == $form['mois']->getData() && $fiche->getIdvisiteur() == $form['idVisiteur']->getData()) {
+                    if ($fiche->getMois() == $form['mois']->getData() && $fiche->getIdvisiteur() == $form['idVisiteur']->getData() && $fiche->getIdEtat()->getId() != "VA") {
                         $session->set('ficheMois', $fiche->getMois());
                         $session->set('ficheIdVisiteur', $fiche->getIdVisiteur()->getId());
                         $session->set('ficheId', $fiche->getId());
                         return $this->redirectToRoute('comptable_validation');
                     }
                 }
-                return $this->render('comptable/valider.html.twig', array('form' => $form->createView(), 'error' => 1));
+                return $this->render('comptable/valider.html.twig', array('form' => $form->createView(), 'error' => 1, 'modifier' => 0));
             }
         }
-        return $this->render('comptable/valider.html.twig', array('form' => $form->createView(), 'error' => 0));
+        if ($session->get('modifier') == 1) {
+            $session->set('modifier', 0);
+            return $this->render('comptable/valider.html.twig', array('form' => $form->createView(), 'error' => 0, 'modifier' => 1));
+        }
+        return $this->render('comptable/valider.html.twig', array('form' => $form->createView(), 'error' => 0, 'modifier' => 0));
     }
     
     /**
@@ -141,11 +145,22 @@ class ComptableController extends AbstractController
                         $fiche->setIdEtat($etat);
                     }
                 }
+                $montantValide = 0;
+                $ligneFraisForfaits = $fiche->getLigneFraisForfaits();
+                foreach ($ligneFraisForfaits as $ligne) {
+                    $montantValide = $montantValide + $ligne->getIdFraisForfait()->getMontant() * $ligne->getQuantite();
+                }
+                $ligneFraisHorsForfaits = $fiche->getLigneFraisHorsForfaits();
+                foreach ($ligneFraisHorsForfaits as $ligne) {
+                    $montantValide = $montantValide + $ligne->getMontant();
+                }
+                $fiche->setMontantValide($montantValide);
                 $fiche->setDateModif(new \DateTime());
                 $entityManager->persist($fiche);
                 $entityManager->flush();
             }
         }
+        $session->set('modifier', 1);
         return $this->redirectToRoute('valider');
     }    
     

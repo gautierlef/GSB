@@ -25,24 +25,33 @@
         </div>
     </nav>
     <center>
-        <h1>{{ app.session.get('nom') }} {{ app.session.get('prenom') }}</h1>
-        {% if error == 1 %}
-            <p class="alert alert-danger">Cette fiche de frais existe déjà!</p>
-        {% endif %}        
-        {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
-        {{ form_label(form.mois) }}
-        {{ form_widget(form.mois) }}<br/><br/>
-        {{ form_label(form.nbjustificatifs) }}
-        {{ form_widget(form.nbjustificatifs) }}<br/>
-        <br/>
-        <div class="row">
-            <div>
-                {{ form_widget(form.annuler) }}
-                <a style="margin-left:20px">{{ form_widget(form.valider) }}</a>
-                {{ form_end(form) }}
+    <div style="width: 50%; border: 1px solid black; background-color: background"><center>        
+            <h1>{{ app.session.get('nom') }} {{ app.session.get('prenom') }}</h1>
+            {% if error == 1 %}
+                <p class="alert alert-danger">Cette fiche de frais existe déjà!</p>
+            {% endif %}
+            {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+            {{ form_label(form.mois) }}
+            {{ form_widget(form.mois) }}<br/><br/>
+            {{ form_label(form.nbjustificatifs) }}
+            {{ form_widget(form.nbjustificatifs) }}<br/>
+            <br/>
+            <div class="row">
+                <div>
+                    {{ form_widget(form.annuler) }}
+                    <a style="margin-left:20px">{{ form_widget(form.valider) }}</a>
+                    {{ form_end(form) }}
+                </div>
             </div>
-        <br/>
+            <br/>
+        </center>
+    </div>
+    <br/>
+    <div style="width: 50%; border: 1px solid black; background-color: background"><center>
         <h2>Frais Hors Forfait</h2>
+        {% if error == 2 %}
+            <p class="alert alert-danger">Cette fiche de frais n'existe pas! {{ mois1 }}</p>
+        {% endif %}
         {{ form_start(form2, {'attr': {'class': 'form-horizontal'}}) }}
         {{ form_label(form2.libelle) }}
         {{ form_widget(form2.libelle) }}<br/>
@@ -60,6 +69,8 @@
             </div>
             {{ form_end(form2) }}
         </div>
+        <br/>
+    </center></div>
     </center>
 </div>
 {% endblock %}

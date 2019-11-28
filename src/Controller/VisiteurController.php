@@ -43,7 +43,18 @@ class VisiteurController extends AbstractController
         $form = $this->createForm(RenseignerType::class, $renseigner);
         $form->handleRequest($query);
         $ligneFraisHorsForfait = new LigneFraisHorsForfait();
-        $form2 = $this->createForm(LigneFraisHorsForfaitType::class, $ligneFraisHorsForfait);
+        $form2 = $this->createForm(LigneFraisHorsForfaitType::class, $ligneFraisHorsForfait, array('id' => $session->get('id')));
+        $fiches = $this->getFiches();
+        $fichePresente = false;
+        foreach ($fiches as $fiche) {
+            if ($fiche->getIdVisiteur()->getId() == $session->get('id') && $fiche->getMois()) {
+                $ligneFraisHorsForfait->setMois($fiche);
+                $fichePresente = true;
+            }
+        }
+        if ($fichePresente == false) {
+            return $this->render('visiteur/renseigner.html.twig', array('form' => $form->createView(), 'form2' => $form2->createView(), 'error' => 2, 'mois1' => $form2['mois']->getData()));
+        }
         $form2->handleRequest($query);
         if ($query->isMethod('POST')) {
             if ($form->isSubmitted()) {
@@ -74,6 +85,20 @@ class VisiteurController extends AbstractController
                     $this->creerLigneFrais($renseigner->getId());
                     return $this->redirectToRoute('renseigner', array('id' => $renseigner->getIdvisiteur()));
                 }
+            }
+            if ($form3->isSubmitted()) {
+                if ($form3->isValid()) {
+                    $fiches = $this->getFiches();
+                    foreach ($fiches as $fiche) {
+                        if ($fiche->getIdVisiteur()->getId() == $session->get('id')) {
+                            $ligneFraisForfait->setIdVisiteur($fiche->getIdVisiteur());
+                        }
+                    }
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($ligneFraisForfait);
+                    $em->flush();
+                    return $this->redirectToRoute('renseigner', array('id' => $ligneFraisForfait->getIdvisiteur()));
+                }     
             }
             if ($form2->isSubmitted()) {
                 if ($form2->isValid()) {

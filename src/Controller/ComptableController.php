@@ -45,7 +45,10 @@ class ComptableController extends AbstractController
             if ($form->isValid()) {
                 $fiches = $this->getFiches();
                 foreach ($fiches as $fiche) {
-                    if ($fiche->getMois() == $form['mois']->getData() && $fiche->getIdvisiteur() == $form['idVisiteur']->getData() && $fiche->getIdEtat()->getId() != "VA") {
+                    if ($fiche->getMois() == $form['mois']->getData() && $fiche->getIdvisiteur() == $form['idVisiteur']->getData()) {
+                        if ($fiche->getIdEtat()->getId() == "VA") {
+                            return $this->render('comptable/valider.html.twig', array('form' => $form->createView(), 'error' => 2, 'modifier' => 0));
+                        }
                         $session->set('ficheMois', $fiche->getMois());
                         $session->set('ficheIdVisiteur', $fiche->getIdVisiteur()->getId());
                         $session->set('ficheId', $fiche->getId());
@@ -90,7 +93,7 @@ class ComptableController extends AbstractController
                 $lignesFraisForfait = array($modifierLigneRepas, $modifierLigneNuitee, $modifierLigneKilometres, $modifierLigneEtape);
                 if ($query->isMethod('POST')) {
                     $em = $this->getDoctrine()->getManager();
-                    if ($form1->isSubmitted() && $form1->isValid() && $form1->getData()) {
+                    if ($form1->isSubmitted() && $form1->isValid()) {
                         $em->persist($modifierLigneRepas);
                         $em->flush();
                     }

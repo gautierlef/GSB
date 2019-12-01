@@ -9,12 +9,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Psr\Log\LoggerInterface;
 use App\Form\RenseignerType;
+use App\Form\LigneFraisForfaitType;
 use App\Form\LigneFraisHorsForfaitType;
 use App\Entity\FicheFrais;
 use App\Entity\LigneFraisForfait;
 use App\Entity\LigneFraisHorsForfait;
 use App\Entity\FraisForfait;
-use App\Service\Test;
+
 
 class VisiteurController extends AbstractController
 {
@@ -43,19 +44,12 @@ class VisiteurController extends AbstractController
         $form = $this->createForm(RenseignerType::class, $renseigner);
         $form->handleRequest($query);
         $ligneFraisHorsForfait = new LigneFraisHorsForfait();
+        $lignesFraisForfait = array();
         $form2 = $this->createForm(LigneFraisHorsForfaitType::class, $ligneFraisHorsForfait, array('id' => $session->get('id')));
         $fiches = $this->getFiches();
-        $fichePresente = false;
-        foreach ($fiches as $fiche) {
-            if ($fiche->getIdVisiteur()->getId() == $session->get('id') && $fiche->getMois()) {
-                $ligneFraisHorsForfait->setMois($fiche);
-                $fichePresente = true;
-            }
-        }
-        if ($fichePresente == false) {
-            return $this->render('visiteur/renseigner.html.twig', array('form' => $form->createView(), 'form2' => $form2->createView(), 'error' => 2, 'mois1' => $form2['mois']->getData()));
-        }
         $form2->handleRequest($query);
+        $form3 = $this->createForm(LigneFraisForfaitType::class, $lignesFraisForfait, array('id' => $session->get('id')));
+        $form3->handleRequest($query);
         if ($query->isMethod('POST')) {
             if ($form->isSubmitted()) {
                 if ($form->isValid()) {
@@ -68,7 +62,7 @@ class VisiteurController extends AbstractController
                     $fiches = $this->getFiches();
                     foreach ($fiches as $fiche) {
                         if ($fiche->getIdVisiteur()->getId() == $session->get('id') && $renseigner->getMois() == $fiche->getMois()) {
-                            return $this->render('visiteur/renseigner.html.twig', array('form' => $form->createView(), 'form2' => $form2->createView(), 'error' => 1));
+                            return $this->render('visiteur/renseigner.html.twig', array('form' => $form->createView(), 'form2' => $form2->createView(), 'form3' => $form3->createView(), 'error' => 1));
                         }
                     }
                     $etats = $this->getEtat();
@@ -91,13 +85,37 @@ class VisiteurController extends AbstractController
                     $fiches = $this->getFiches();
                     foreach ($fiches as $fiche) {
                         if ($fiche->getIdVisiteur()->getId() == $session->get('id')) {
-                            $ligneFraisForfait->setIdVisiteur($fiche->getIdVisiteur());
+                            $ficheFrais = $fiche;
                         }
                     }
+                    $lignesFraisForfait = $this->getLignesFraisForfait($ficheFrais->getMois(), $ficheFrais->getIdVisiteur()->getId());
                     $em = $this->getDoctrine()->getManager();
-                    $em->persist($ligneFraisForfait);
+                    foreach($lignesFraisForfait as $ligne) {
+                        if ($ligne->getIdFraisForfait()->getId() == 'REP') {
+                            $ligne->setQuantite($form3['quantiteRepas']->getData());
+                            $em->persist($ligne);
+                        }
+                    }
+                    foreach($lignesFraisForfait as $ligne) {
+                        if ($ligne->getIdFraisForfait()->getId() == 'NUI') {
+                            $ligne->setQuantite($form3['quantiteNuitee']->getData());
+                            $em->persist($ligne);
+                        }
+                    }
+                    foreach($lignesFraisForfait as $ligne) {
+                        if ($ligne->getIdFraisForfait()->getId() == 'KM') {
+                            $ligne->setQuantite($form3['quantiteKilometres']->getData());
+                            $em->persist($ligne);
+                        }
+                    }
+                    foreach($lignesFraisForfait as $ligne) {
+                        if ($ligne->getIdFraisForfait()->getId() == 'ETP') {
+                            $ligne->setQuantite($form3['quantiteEtape']->getData());
+                            $em->persist($ligne);
+                        }
+                    }
                     $em->flush();
-                    return $this->redirectToRoute('renseigner', array('id' => $ligneFraisForfait->getIdvisiteur()));
+                    return $this->redirectToRoute('renseigner', array('id' => $ficheFrais->getIdVisiteur()->getId()));
                 }     
             }
             if ($form2->isSubmitted()) {
@@ -115,7 +133,7 @@ class VisiteurController extends AbstractController
                 }     
             }
         }
-        return $this->render('visiteur/renseigner.html.twig', array('form' => $form->createView(), 'form2' => $form2->createView(), 'error' => 0));
+        return $this->render('visiteur/renseigner.html.twig', array('form' => $form->createView(), 'form2' => $form2->createView(), 'form3' => $form3->createView(), 'error' => 0));
     }
     
     public function creerLigneFrais(String $idFicheFrais) {
@@ -174,6 +192,17 @@ class VisiteurController extends AbstractController
     public function getFiches() {
         $fiches = $this->getDoctrine()->getRepository(\App\Entity\FicheFrais::class)->findAll();
         return $fiches;
+    }
+    
+    public function getLignesFraisForfait(string $mois, string $idVisiteur) {
+        $lignesUtilisateur = array();
+        $lignes = $this->getDoctrine()->getRepository(\App\Entity\LigneFraisForfait::class)->findAll();
+        foreach ($lignes as $ligne) {
+            if ($idVisiteur == $ligne->getIdVisiteur()->getId() && $mois == $ligne->getMois()->getMois()) {
+                array_push($lignesUtilisateur, $ligne);
+            }
+        }
+        return $lignesUtilisateur;
     }
     
     public function getForfait() {

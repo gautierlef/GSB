@@ -28,24 +28,87 @@
         <h1>{{ app.session.get('nom') }} {{ app.session.get('prenom') }}</h1>
     </center>
 </div>
-    <center>
-        <table style="width:50% ">
-            <tr style="text-decoration: underline">
-                <th>Mois</th>
-                <th>Nombre de justificatifs</th>
-                <th>Montant valide</th>
-                <th>Date modification</th>
-                <th>Etat</th>
-            </tr>
-            {% for unefichefrais in fichefrais %}
-             <tr>
-                <th>{{ unefichefrais.mois }}</th>
-                <th>{{ unefichefrais.nbjustificatifs }}</th>
-                <th>{{ unefichefrais.montantvalide }}</th>
-                <th>{{ unefichefrais.datemodif|date('Y-m-d') }}</th>
-             </tr>  
-            {% endfor %} 
-        </table>
+<div>
+    {% if fichefrais != null %}
+        <center>
+            <p style="font-weight:bold; width:60%; background-color:whitesmoke; border-radius: 5px;" class="table">Fiche Frais</p>
+            <table style="width:50%; background-color:whitesmoke; border-radius: 5px;" class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">mois</th>
+                        <th scope="col">nbjustificatifs</th>
+                        <th scope="col">montantvalide</th>
+                        <th scope="col">datemodif</th>
+                        <th scope="col">Etat</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody> 
+                    {% for unefichefrais in fichefrais %}
+                        <tr>
+                            <th>{{ unefichefrais.mois }}</th>
+                            <td>{{ unefichefrais.nbjustificatifs }}</td>
+                            <td>{{ unefichefrais.montantvalide }}</td>
+                            <td>{{ unefichefrais.datemodif|date('d-m-Y') }}</td>
+                            <td>{{ unefichefrais.idEtat.libelle }}</td>
+                                {% if unefichefrais.idEtat.libelle == "Fiche créée, saisie en cours" %}
+                                    <form action="/getIdVI/{{ unefichefrais.id }}" Method="post">
+                                        <td><button>Modifier</button></td>
+                                    </form>
+                                {% endif %}
+                        </tr>          
+                    {% endfor %}
+                </tbody> 
+            </table>
+            </br>
+            </br>
+        {% endif %}
+        {% if fichefraisforfait != null %}
+            <p style="font-weight:bold; width:60%; background-color:whitesmoke; border-radius: 5px;" class="table">Fiche Frais Forfait</p>
+            <table style="width:50%; background-color:whitesmoke; border-radius: 5px;" class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Nom </th>
+                        <th scope="col">Prenom </th>
+                        <th scope="col">Quantité </th>
+                        <th scope="col">Libelle </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for unefichefraisforfait in fichefraisforfait %}                    
+                        <tr>
+                            <td>{{ unefichefraisforfait.quantite }}</td>
+                            <td>{{ unefichefraisforfait.idFraisForfait.libelle }}</td>  
+                        </tr>             
+                    {% endfor %}
+                </tbody>
+            </table>
+            </br>
+            </br>
+        {% endif %}
+        
+        {% if fichefraishorsforfait != null %}
+            <p style="font-weight:bold; width:60%; background-color:whitesmoke; border-radius: 5px;" class="table">Fiche Frais Hors Forfait</p>
+            <table style="width:50%; background-color:whitesmoke; border-radius: 5px;" class="table">
+                <thead>     
+                    <tr>
+                        <th scope="col">Montant</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Libelle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for unefichefraishorsforfait in fichefraishorsforfait %}
+                        <tr>
+                            <td>{{ unefichefraishorsforfait.montant}}</td>
+                            <td>{{ unefichefraishorsforfait.date|date('d-m-Y') }}</td>
+                            <td>{{ unefichefraishorsforfait.libelle}}</td>   
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
     </center>
+</div>        
 {% endblock %}
 

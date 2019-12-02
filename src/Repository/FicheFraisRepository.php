@@ -47,4 +47,16 @@ class FicheFraisRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function getFicheFraisByOrder()
+    {
+
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('a')
+            ->from(Bien::class,'a')
+            ->where('a.id = :id')
+            ->addOrderBy('a.idVisiteur.nom', 'ASC');
+        $query = $qb->getQuery();
+        $result = $query->getOneOrNullResult();
+        return $result;
+    }
 }

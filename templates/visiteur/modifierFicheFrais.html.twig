@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Visiteur - Consulter{% endblock %}
+
+{% block head %}
+{{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <nav style="background-color:#7695ad;" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a style="color:#ffffff; margin-right: 250px" href="/visiteur">Accueil</a></li>
+                    <li><a style="color:#ffffff;" href="/renseigner">Renseigner fiche de frais</a></li>
+                        <li><a style="color:#ffffff;" href="/consulter">Consulter fiche de frais</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a style="color:#ffffff;" href="/connexion">Se déconnecter</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <center>
+        <h1>{{ app.session.get('nom') }} {{ app.session.get('prenom') }}</h1>
+    </center>
+</div>
+<div>
+    <center>
+        <table style="width:50%; background-color:whitesmoke; border-radius: 5px;" class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Mois</th>
+                    <th scope="col">Nbjustificatifs</th>
+                    <th scope="col">Montantvalide</th>
+                    <th scope="col">Datemodif</th>
+                    <th scope="col">Etat</th>
+                    <th scope="col"></th>     
+                </tr>
+            </thead>
+            <tbody>      
+                <tr>
+                    {{ form_start(form) }}
+                    <th scope="row">{{ fichefrais.mois }}</th>
+                    <td>{{ form_widget(form.nbJustificatifs, {'attr': {'class': 'form-horizontal'}}) }}</td>
+                    <td>{{ fichefrais.montantvalide }}</td>
+                    <td>{{ fichefrais.datemodif|date('d-m-Y') }}</td>
+                    <td>{{ fichefrais.idEtat.libelle }}</td>
+                    <td>{{ form_widget(form.valider) }}</td>
+                    {{ form_end(form) }}
+                </tr>              
+            </tbody>
+        </table>
+    </center>
+</div>      
+{% endblock %}

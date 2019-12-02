@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Visiteur - Consulter{% endblock %}
+
+{% block head %}
+{{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <nav style="background-color:#7695ad;" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a style="color:#ffffff; margin-right: 250px" href="/visiteur">Accueil</a></li>
+                    <li><a style="color:#ffffff;" href="/renseigner">Renseigner fiche de frais</a></li>
+                        <li><a style="color:#ffffff;" href="/consulter">Consulter fiche de frais</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a style="color:#ffffff;" href="/connexion">Se déconnecter</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <center>
+        <h1>{{ app.session.get('nom') }} {{ app.session.get('prenom') }}</h1>
+    </center>
+</div>
+<center>
+    <div>
+        <table style="width:20%; background-color:whitesmoke; border-radius: 5px;" class="table">
+            <tbody>      
+                <tr>
+                    {{ form_start(form) }}
+                    <td>Mois : </td>
+                    <td>{{ form_widget(form.mois, {'attr': {'class': 'form-horizontal'}}) }}</td>
+                    <td>{{ form_widget(form.valider, {'attr': {'class': 'form-horizontal'}}) }}</td>
+                    {{ form_end(form) }}
+                </tr>              
+            </tbody>
+        </table>
+    </div>
+</center>
+{% endblock %}
+

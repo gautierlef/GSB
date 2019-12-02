@@ -9,8 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Psr\Log\LoggerInterface;
 use App\Form\RenseignerType;
+use App\Form\ChoisirMoisType;
 use App\Form\LigneFraisForfaitType;
 use App\Form\LigneFraisHorsForfaitType;
+use App\Form\ModifierFicheFraisVisiteurType;
 use App\Entity\FicheFrais;
 use App\Entity\LigneFraisForfait;
 use App\Entity\LigneFraisHorsForfait;
@@ -25,15 +27,6 @@ class VisiteurController extends AbstractController
     public function index()
     {
         return $this->render('visiteur/index.html.twig');
-    }
-    
-    /**
-     * @Route("/consulter", name="consulter")
-     */
-    public function consulter(SessionInterface $session)
-    {
-        $fichefrais = $this->getDoctrine()->getManager()->getRepository(\App\Entity\FicheFrais::class)->findBy(['idVisiteur' => $session->get('id')]);;
-        return $this->render('visiteur/consulter.html.twig',array('fichefrais'=>$fichefrais));
     }
     
     /**
@@ -134,6 +127,65 @@ class VisiteurController extends AbstractController
             }
         }
         return $this->render('visiteur/renseigner.html.twig', array('form' => $form->createView(), 'form2' => $form2->createView(), 'form3' => $form3->createView(), 'error' => 0));
+    }
+    
+    /**
+     * @Route("/consulter", name="consulter")
+     */
+    public function consulter(Request $query, SessionInterface $session)
+    {
+        $renseigner = new Fichefrais();
+        $form = $this->createForm(ChoisirMoisType::class, $renseigner);
+        $form->handleRequest($query);
+        if ($form->isSubmitted()) {
+            $session->set('mois', $renseigner->getMois()) ;
+            return $this->redirectToRoute('consulterFicheFrais');
+        }
+        return $this->render('visiteur/choisirMois.html.twig', array('form' => $form->createView()));
+    }
+    
+    /**
+     * @Route("/consulterFicheFrais", name="consulterFicheFrais")
+     */
+    public function consulterFicheFrais(SessionInterface $session)
+    {
+        $id = $session->get('id') ;
+        $mois = $session->get('mois') ;
+        $fichefrais = $this->getDoctrine()->getManager()->getRepository(\App\Entity\FicheFrais::class)->findBy(['idVisiteur' => $id, 'mois' => $mois]);;
+        $fichefraisforfait = $this->getDoctrine()->getManager()->getRepository(\App\Entity\LigneFraisForfait::class)->findBy(['idVisiteur' => $id, 'mois' => $mois]);
+        $fichefraishorsforfait = $this->getDoctrine()->getManager()->getRepository(\App\Entity\LigneFraisHorsForfait::class)->findBy(['idVisiteur' => $id, 'mois' => $mois]);
+        return $this->render('visiteur/consulter.html.twig',array('fichefrais'=>$fichefrais, 'fichefraisforfait'=>$fichefraisforfait,  'fichefraishorsforfait'=>$fichefraishorsforfait));
+    }
+    
+    /**
+     * @Route("/getIdVI/{id}", name="getIdVI")
+     */
+    public function getIdVI($id, SessionInterface $session)
+    {
+        $session->set('idVI', $id) ;
+        return $this->redirectToRoute('upd_route_fiche_frais');
+    }
+    
+    
+    /**
+     *@Route("/modifierFicheFrais",name="upd_route_fiche_frais")
+     */
+    public function modifierFicheFrais(Request $request, SessionInterface $session) {
+        $id = $session->get('idVI') ;
+        $fichefrais = $this->getDoctrine()->getManager()->getRepository(FicheFrais::class)->find($id);
+        $fichefrais->setDateModif(new \DateTime());
+        $request->getSession()->getFlashBag()->add('notice', '');
+        $form = $this->createForm(ModifierFicheFraisVisiteurType::class, $fichefrais);
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->flush();
+                $request->getSession()->getFlashBag()->add('success', 'Fiche frais modifié avec succès.');
+                return $this->redirectToRoute('consulter');
+            }
+        }
+        return $this->render( 'visiteur/modifierFicheFrais.html.twig', array('form' =>$form->createView(), 'fichefrais'=>$fichefrais));
     }
     
     public function creerLigneFrais(String $idFicheFrais) {

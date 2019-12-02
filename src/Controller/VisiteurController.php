@@ -151,10 +151,10 @@ class VisiteurController extends AbstractController
     {
         $id = $session->get('id') ;
         $mois = $session->get('mois') ;
-        $fichefrais = $this->getDoctrine()->getManager()->getRepository(\App\Entity\FicheFrais::class)->findBy(['idVisiteur' => $id, 'mois' => $mois]);;
-        $fichefraisforfait = $this->getDoctrine()->getManager()->getRepository(\App\Entity\LigneFraisForfait::class)->findBy(['idVisiteur' => $id, 'mois' => $mois]);
-        $fichefraishorsforfait = $this->getDoctrine()->getManager()->getRepository(\App\Entity\LigneFraisHorsForfait::class)->findBy(['idVisiteur' => $id, 'mois' => $mois]);
-        return $this->render('visiteur/consulter.html.twig',array('fichefrais'=>$fichefrais, 'fichefraisforfait'=>$fichefraisforfait,  'fichefraishorsforfait'=>$fichefraishorsforfait));
+        $fichefrais = $this->getDoctrine()->getManager()->getRepository(\App\Entity\FicheFrais::class)->findBy(['idVisiteur' => $id, 'mois' => $mois]);
+        $lignesfraisforfait = $this->getLignesFraisForfait($mois, $id);
+        $lignesfraishorsforfait = $this->getLignesFraisHorsForfait($mois, $id);
+        return $this->render('visiteur/consulter.html.twig',array('fichefrais'=>$fichefrais, 'fichefraisforfait'=>$lignesfraisforfait, 'fichefraishorsforfait'=>$lignesfraishorsforfait));
     }
     
     /**
@@ -244,6 +244,17 @@ class VisiteurController extends AbstractController
     public function getFiches() {
         $fiches = $this->getDoctrine()->getRepository(\App\Entity\FicheFrais::class)->findAll();
         return $fiches;
+    }
+    
+    public function getLignesFraisHorsForfait(string $mois, string $idVisiteur) {
+        $lignesUtilisateur = array();
+        $lignes = $this->getDoctrine()->getRepository(\App\Entity\LigneFraisHorsForfait::class)->findAll();
+        foreach ($lignes as $ligne) {
+            if ($idVisiteur == $ligne->getIdvisiteur()->getId() && $mois == $ligne->getMois()->getMois()) {
+                array_push($lignesUtilisateur, $ligne);
+            }
+        }
+        return $lignesUtilisateur;
     }
     
     public function getLignesFraisForfait(string $mois, string $idVisiteur) {

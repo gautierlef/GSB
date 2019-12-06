@@ -94,18 +94,30 @@ class ComptableController extends AbstractController
                 if ($query->isMethod('POST')) {
                     $em = $this->getDoctrine()->getManager();
                     if ($form1->isSubmitted() && $form1->isValid()) {
+                        if ($form1['quantite']->getData() < 0) {
+                            return $this->redirectToRoute('comptable_validation');
+                        }
                         $em->persist($modifierLigneRepas);
                         $em->flush();
                     }
                     if ($form2->isSubmitted() && $form2->isValid()) {
+                        if ($form2['quantite']->getData() < 0) {
+                            return $this->redirectToRoute('comptable_validation');
+                        }
                         $em->persist($modifierLigneNuitee);
                         $em->flush();
                     }
                     if ($form3->isSubmitted() && $form3->isValid()) {
+                        if ($form3['quantite']->getData() < 0) {
+                            return $this->redirectToRoute('comptable_validation');
+                        }
                         $em->persist($modifierLigneKilometres);
                         $em->flush();
                     }
                     if ($form4->isSubmitted() && $form4->isValid()) {
+                        if ($form4['quantite']->getData() < 0) {
+                            return $this->redirectToRoute('comptable_validation');
+                        }
                         $em->persist($modifierLigneEtape);
                         $em->flush();
                     }

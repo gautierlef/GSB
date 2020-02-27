@@ -188,6 +188,17 @@ class VisiteurController extends AbstractController
         return $this->render( 'visiteur/modifierFicheFrais.html.twig', array('form' =>$form->createView(), 'fichefrais'=>$fichefrais));
     }
     
+    /**
+     * @Route("/supprimerHorsForfaitVisiteur/{id}", name="supprimerHorsForfaitVisiteur")
+     */
+    public function supprimerHorsForfait(Request $query, SessionInterface $session, $id) {
+        $entityManager = $this->getDoctrine()->getManager();
+        $lignesFraisHorsForfait = $this->getDoctrine()->getManager()->getRepository(LigneFraisHorsForfait::class)->find($id);
+        $entityManager->remove($lignesFraisHorsForfait);
+        $entityManager->flush();
+        return $this->redirectToRoute('consulterFicheFrais');
+    }
+    
     public function creerLigneFrais(String $idFicheFrais) {
         $ligneFraisRep = new LigneFraisForfait();
         $ligneFraisKm = new LigneFraisForfait();

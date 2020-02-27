@@ -26,7 +26,7 @@
     <br/>
     <center>
     <div style="width: 50%; border: 1px solid black; background-color: background">
-        <center><h3>Validation des frais par visiteur</h3></center>
+        <center><h3 style="font-weight: bold; text-decoration: underline">Validation des frais par visiteur</h3></center>
         {% if error == 1 %}
             <p class="alert alert-danger">Cette fiche de frais n'existe pas!</p>
         {% endif %}
@@ -37,14 +37,14 @@
             <p class="alert alert-success">Fiche de frais validée!</p>
         {% endif %}
         {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
-        {{ form_widget(form) }}
-        <br/>
-        <div class="row">
-            <div>
-                <button type="reset" class="btn btn-danger">Annuler</button>
-                <button style="margin-left: 20px" type="submit" class="btn btn-success">Valider</button>
-            </div>
-        </div>
+            <p style="font-weight: bold; text-decoration: underline"> Mois :</p>
+            <p> {{ form_widget(form.mois) }}</p>
+            <p style="font-weight: bold; text-decoration: underline">Visiteur :</p>
+            <p style="width: 60%;"> {{ form_widget(form.idVisiteur) }}</p>
+            <br/>
+            <button type="reset" class="btn btn-danger">Annuler</button>
+            <button style="margin-left: 20px" type="submit" class="btn btn-success">Valider</button>
+        {{ form_end(form) }}
         <br/>
     </div>
     </center>
